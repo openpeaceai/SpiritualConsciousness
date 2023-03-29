@@ -1,0 +1,261 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import streamlit as st
+
+
+# In[2]:
+
+
+st.set_page_config(
+    page_title="Spiritual Consciousness Survey",
+    page_icon="☮️",
+    layout="centered",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'About': "https://openpeace.ai/about-us"
+    }
+)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[3]:
+
+
+import pandas as pd
+pd.set_option('display.max_colwidth', None)
+from sqlalchemy import create_engine
+
+import numpy as np 
+import mysql.connector
+import pycountry
+from datetime import datetime, date, timedelta
+
+
+# In[ ]:
+
+
+
+
+
+# In[4]:
+
+
+with st.sidebar:
+    st.image("https://img1.wsimg.com/isteam/ip/f8df9fda-2223-42be-a383-5d7d72e7c082/Openpeace%20Logo_Layout%201A.png/:/rs=w:230,h:38,cg:true,m/cr=w:230,h:38/qt=q:100/ll", width=230)  # Adjust the width as needed
+    st.header("Spiritual Consciousness Survey")
+    st.write("Introducing the Spiritual Consciousness Survey, a unique and engaging                 questionnaire designed to explore individual perspectives on spirituality,                 personal growth, and transcendent experiences.")
+    
+
+st.subheader("Please enter your email, birthday and country:")    
+# Input fields for email, birthday and country
+email = st.text_input("Email:", "")
+min_birthday = date.today() - timedelta(days=365*110)
+max_birthday = date.today() - timedelta(days=365*14)
+birthday = st.date_input("Birthday (MM/DD/YYYY):", value=datetime(2000, 1, 1), min_value=min_birthday, max_value=max_birthday)
+countries = ["Select Country"] + sorted(["United States"] + [country.name for country in pycountry.countries if country.name != "United States"])
+country = st.selectbox("Country:", countries)
+    
+st.subheader("About your spiritual consciousness:")
+
+
+# In[ ]:
+
+
+
+
+
+# In[5]:
+
+
+server = '184.168.194.64'
+database = 'op_mssql_mama'
+username = 'op_papa'
+password = 's3x9&B7t'
+
+# Create the connection string
+connection_str = f'mssql+pymssql://{username}:{password}@{server}/{database}'
+
+# Create the database engine
+engine = create_engine(connection_str)
+
+
+# In[ ]:
+
+
+
+
+
+# In[6]:
+
+
+# Fetch questions and sections from the database
+query = f"SELECT question_id, question_text, question_section             FROM spiritual_consciousness_questions             ORDER BY question_id"
+questions = pd.read_sql(query, engine)
+questions_tuples = list(questions.itertuples(index=False))
+
+# Fetch answers from the database
+query = f"SELECT question_id, answer_text, answer_value     FROM spiritual_consciousness_answers     ORDER BY question_id, answer_value"
+answers = pd.read_sql(query, engine)
+answers_tuples = list(answers.itertuples(index=False))
+
+
+# In[ ]:
+
+
+
+
+
+# In[7]:
+
+
+options_dict = {}
+
+for question_id, answer_text, answer_value in answers_tuples:
+    if question_id not in options_dict:
+        options_dict[question_id] = [("Select", None)]
+    options_dict[question_id].append((answer_text, answer_value))
+
+
+# In[ ]:
+
+
+
+
+
+# In[8]:
+
+
+responses = []
+
+current_section = None
+for question_id, question_text, question_section in questions_tuples:
+    if current_section != question_section:
+        st.subheader(question_section)
+        current_section = question_section
+
+    response = st.selectbox(
+        question_text,
+        options=[(text, value) for text, value in options_dict[question_id]],
+        format_func=lambda option: option[0],
+        key=question_id
+    )
+    responses.append(response[1])  # Store the answer value
+
+
+# In[ ]:
+
+
+
+
+
+# In[9]:
+
+
+# Active user flag
+#active = st.checkbox("Active user", value=True)
+
+survey_id = 1  # You can change this to the ID of the desired survey
+
+
+# In[ ]:
+
+
+
+
+
+# In[10]:
+
+
+if st.button("Submit"):
+      
+    if all(response is not None for response in responses):
+        if email and birthday and country:
+            # Check if the user exists
+            query = f"SELECT * FROM op_survey_users WHERE email = '{email}'"
+            existing_user = pd.read_sql(query, engine)
+
+            if existing_user.empty:
+                # Save user information
+                query = f"INSERT INTO op_survey_users (email, birthday, country) VALUES ('{email}', '{birthday}', '{country}')"
+                engine.execute(query)
+
+                # Get the user_id
+                query = f"SELECT id FROM op_survey_users WHERE email = '{email}'"
+                user_id = pd.read_sql(query, engine).iloc[0]['id']
+            else:
+                user_id = existing_user.iloc[0]['id']
+
+            # Check if the user has already submitted this survey
+            query = f"SELECT * FROM spiritual_consciousness_survey_responses WHERE user_id = {user_id} AND survey_id = {survey_id}"
+            existing_response = pd.read_sql(query, engine)
+
+            if existing_response.empty:
+                
+                with st.spinner("Please wait while we check your submission..."): 
+                    
+                    
+                    # Check if all questions have been answered
+                    if all(response is not None for response in responses):
+                        # Calculate the total sum of the answer values
+                        #total_sum_of_answers = sum([answer_value for _, _, answer_value in answers_tuples])
+
+                        # Calculate the total value of the user's submission
+                        total_value_of_user_submission = sum(responses)
+
+                        # Calculate the total percentage of the user's answer submission
+                        total_percentage_of_user_submission = (total_value_of_user_submission / 150) * 100      
+        
+                
+                # Save responses
+                for question_id, response in enumerate(responses, start=1):
+                    query = f"INSERT INTO spiritual_consciousness_survey_responses (user_id, survey_id, question_id, response) VALUES ({user_id}, {survey_id}, {question_id}, {response})"
+                    engine.execute(query)
+                    
+                # Insert the total_percentage_of_user_submission into the spiritual_consciousness_user_survey_score table
+                query = f"INSERT INTO spiritual_consciousness_user_survey_score (user_id, survey_id, score) VALUES ({user_id}, {survey_id}, {total_percentage_of_user_submission})"
+                engine.execute(query)
+
+                st.sidebar.success("Thank you for your submission!")
+                st.sidebar.info(f"Your spiritual consciousness is at the : {total_percentage_of_user_submission:.2f}%")
+                st.balloons()
+                
+            else:
+                st.sidebar.warning("You have already submitted this survey. You cannot submit it more than once.")
+        else:
+            st.sidebar.error("Please provide all required information.")     
+    else:
+        st.sidebar.error("Please answer all questions before submitting the survey.")
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
