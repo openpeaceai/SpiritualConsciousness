@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[43]:
+# In[1]:
 
 
 import streamlit as st
 
 
-# In[50]:
+# In[2]:
 
 
 st.set_page_config(
-    page_title="Spiritual Consciousness Assesment",
+    page_title="Spiritual Consciousness Assessment",
     page_icon="☮️",
     layout="centered",
     initial_sidebar_state="expanded",
@@ -21,7 +21,7 @@ st.set_page_config(
 )
 
 
-# In[102]:
+# In[3]:
 
 
 # Add css to make text bigger
@@ -29,56 +29,56 @@ st.markdown(
     """
     <style>
     
-    body{font-size:18px;}
-    
     label 
     {
-    font-size: 3rem !important;
-    color: #228B22;
+    font-size:115% !important;
+    color: #800000;
     }
     
     div[class*="stSelect"] label {
-    font-size: 26px;
-    color: #228B22;
+    font-size:115% !important;
+    color: #800000;
     }
 
 
     div[class*="stTextArea"] label {
-    font-size: 3rem !important;
-    color: #228B22;
+    font-size:115% !important;
+    color: #800000;
     }
 
     div[class*="stTextInput"] label {
-    font-size: 3rem !important;
-    color: #228B22;
+    font-size:115% !important;
+    color: #800000;
     }
     
     div[class*="stDateInput"] label {
-    font-size: 3rem !important;
-    color: #228B22;
+    font-size:115% !important;
+    color: #800000;
     }
 
     div[class*="stNumberInput"] label {
-    font-size: 3rem !important;
-    color: #228B22;
+    font-size:115% !important;
+    color: #800000;
     }
     
     div[data-testid="column"]:nth-of-type(1)
     {
         border:0px solid blue;
+        color: #c0c0c0;
     }
     div[data-testid="column"]:nth-of-type(2)
     {
         border:0px solid blue;
+        color: #c0c0c0;
         text-align: end;
     }
     .stTextInput > label 
     {
-    font-size:115%; font-weight:bold; color:#228B22;
+    font-size:115%; font-weight:bold; color:#800000;
     }    
     .stMultiSelect > label 
     {
-    font-size:115%; font-weight:bold; color:#228B22;
+    font-size:115%; font-weight:bold; color:#800000;
     }
     </style>
     """,
@@ -92,7 +92,7 @@ st.markdown(
 
 
 
-# In[52]:
+# In[4]:
 
 
 import pandas as pd
@@ -111,13 +111,13 @@ from datetime import datetime, date, timedelta
 
 
 
-# In[103]:
+# In[5]:
 
 
 #with st.sidebar:
 st.image("https://img1.wsimg.com/isteam/ip/f8df9fda-2223-42be-a383-5d7d72e7c082/Openpeace%20Logo_Layout%201A.png/:/rs=w:230,h:38,cg:true,m/cr=w:230,h:38/qt=q:100/ll", width=230)  # Adjust the width as needed
-st.header("Spiritual Consciousness Assesment")
-st.markdown('##### The Spiritual Consciousness Assesment is a unique and engaging \
+st.header("Spiritual Consciousness Assessment")
+st.markdown('##### The Spiritual Consciousness Assessment is a unique and engaging \
             questionnaire designed to explore individual perspectives on spirituality, \
             personal growth, and transcendent experiences.')
 #st.markdown('##') 
@@ -146,7 +146,7 @@ st.markdown('##### The following section explores a range of topics, \
 
 
 
-# In[82]:
+# In[6]:
 
 
 server = '184.168.194.64'
@@ -167,7 +167,7 @@ engine = create_engine(connection_str)
 
 
 
-# In[83]:
+# In[7]:
 
 
 # Fetch questions and sections from the database
@@ -187,7 +187,7 @@ answers_tuples = list(answers.itertuples(index=False))
 
 
 
-# In[84]:
+# In[8]:
 
 
 options_dict = {}
@@ -204,7 +204,7 @@ for question_id, answer_text, answer_value in answers_tuples:
 
 
 
-# In[88]:
+# In[9]:
 
 
 responses = []
@@ -233,7 +233,7 @@ for question_id, question_text, question_section in questions_tuples:
 
 
 
-# In[58]:
+# In[10]:
 
 
 # Active user flag
@@ -248,7 +248,7 @@ survey_id = 1  # You can change this to the ID of the desired survey
 
 
 
-# In[98]:
+# In[11]:
 
 
 st.markdown('##')
@@ -303,7 +303,7 @@ if st.button("Submit"):
                 engine.execute(query)
 
                 st.success("Thank you for your submission!")
-                st.info(f"Your spiritual consciousness is at the : {total_percentage_of_user_submission:.2f}%")
+                st.info(f"Your spiritual consciousness scpre is: {total_percentage_of_user_submission:.2f}%")
                 st.balloons()
                 
             else:
@@ -314,28 +314,30 @@ if st.button("Submit"):
         st.error("Please answer all questions before submitting the survey.")
 
 
-# In[99]:
+# In[12]:
 
 
 st.markdown('##')
 st.markdown('---')
 
 
-# In[100]:
+# In[13]:
 
 
 col1, col2 = st.columns(2)
 with col1:
-   st.markdown(' :gray[2023 - openpeace.ai, all rights reserved.]', unsafe_allow_html=False)
+   st.markdown(' :grey[2023 - openpeace.ai, all rights reserved.]', unsafe_allow_html=False)
 
 with col2:
-   st.markdown(' :gray[v - 0.1]', unsafe_allow_html=False)
+   st.markdown(' :grey[v - 0.1]', unsafe_allow_html=False)
 
 
-# In[ ]:
+# In[14]:
 
 
+st.markdown("<style> .stTextInput > label {font-size:105%; font-weight:bold; color:blue;} </style>",unsafe_allow_html=True) #for all text-input label sections
 
+st.markdown("<style> .stSelect > label {font-size:105%; font-weight:bold; color:blue;} </style>",unsafe_allow_html=True) #for all multi-select label sections
 
 
 # In[ ]:
