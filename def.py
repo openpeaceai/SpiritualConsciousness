@@ -111,12 +111,14 @@ from datetime import datetime, date, timedelta
 
 
 
-# In[5]:
+# In[15]:
 
 
 #with st.sidebar:
 st.image("https://img1.wsimg.com/isteam/ip/f8df9fda-2223-42be-a383-5d7d72e7c082/Openpeace%20Logo_Layout%201A.png/:/rs=w:230,h:38,cg:true,m/cr=w:230,h:38/qt=q:100/ll", width=230)  # Adjust the width as needed
 st.header("Spiritual Consciousness Assessment")
+st.image("https://img1.wsimg.com/isteam/ip/f8df9fda-2223-42be-a383-5d7d72e7c082/pexels-wouter-de-jong-750896.jpg/:/cr=t:12.42%25,l:0%25,w:100%25,h:75.16%25/rs=w:814,h:407,cg:true")
+
 st.markdown('##### The Spiritual Consciousness Assessment is a unique and engaging \
             questionnaire designed to explore individual perspectives on spirituality, \
             personal growth, and transcendent experiences.')
