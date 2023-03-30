@@ -21,13 +21,15 @@ st.set_page_config(
 )
 
 
-# In[101]:
+# In[102]:
 
 
 # Add css to make text bigger
 st.markdown(
     """
     <style>
+    
+    body{font-size:18px;}
     
     label 
     {
@@ -70,7 +72,14 @@ st.markdown(
         border:0px solid blue;
         text-align: end;
     }
-        
+    .stTextInput > label 
+    {
+    font-size:115%; font-weight:bold; color:#228B22;
+    }    
+    .stMultiSelect > label 
+    {
+    font-size:115%; font-weight:bold; color:#228B22;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -102,7 +111,7 @@ from datetime import datetime, date, timedelta
 
 
 
-# In[94]:
+# In[103]:
 
 
 #with st.sidebar:
@@ -116,8 +125,7 @@ st.markdown('##### Use the form below to select the answers to the questions pre
             Consciousness score.')
 st.markdown('---')     
 st.markdown('##### Please enter your email address, date of birth, and country.')
-st.markdown('###### :red[Note that you can only take this assessment once, and your information \
-                will remain anonymous, as we prioritize your privacy and security.]', unsafe_allow_html=False)
+st.error('NOTE: You can only take this assessment once, and your information                 will remain anonymous, as we prioritize your privacy and security.')
 #st.write("Please enter your email, birthday and country:")    
 # Input fields for email, birthday and country
 email = st.text_input("Email:", "")
